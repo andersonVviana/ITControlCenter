@@ -4,19 +4,24 @@ namespace ITControlCenter
 {
     public partial class ADForm : Form
     {
-        private string userPrincipalName;
+        private ToolTip toolTip1;
 
         public ADForm()
         {
             InitializeComponent();
+            InitializeToolTip();
 
             button2.Click += new EventHandler(button2_Click);
             button2.Enabled = false;
+            button4.Enabled = false;
+            button4.Click += new EventHandler(button4_Click);
             textBox1.KeyDown += new KeyEventHandler(textBox1_TextChanged);
             button2.Click += new EventHandler(button2_Click);
             button3.Click += new EventHandler(button3_Click);
             button3.Enabled = false;
         }
+
+
 
         private void textBox1_TextChanged(object sender, KeyEventArgs e)
         {
@@ -107,6 +112,7 @@ namespace ITControlCenter
                             statusTxb.ForeColor = Color.White;
                             button2.Enabled = false;
                             button3.Enabled = true;
+                            button4.Enabled = true;
                             break;
                         case " Desativado":
                             statusTxb.BackColor = Color.Red;
@@ -118,6 +124,7 @@ namespace ITControlCenter
                             statusTxb.BackColor = Color.Orange;
                             statusTxb.ForeColor = Color.White;
                             button2.Enabled = true;
+                            button4.Enabled = true;
                             break;
                         default:
                             statusTxb.BackColor = SystemColors.Window;
@@ -402,6 +409,43 @@ namespace ITControlCenter
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao alterar o status do usuário: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InitializeToolTip()
+        {
+            // Inicialize o ToolTip
+            toolTip1 = new ToolTip();
+
+            // Configure as propriedades do ToolTip
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 1000;
+            toolTip1.ReshowDelay = 500;
+            toolTip1.ShowAlways = true;
+
+            // Associe o ToolTip ao botão
+            toolTip1.SetToolTip(button4, "Alterar Senha de usuário");
+            toolTip1.SetToolTip(button2, "Desbloquear usuário");
+            toolTip1.SetToolTip(button1, "Adicionar usuário");
+            toolTip1.SetToolTip(button3, "Desativar usuário");
+        }
+
+        private void button4_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ADForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Verifique se o mouse está sobre um botão desativado e exiba o ToolTip
+            Control control = GetChildAtPoint(e.Location);
+            if (control != null && !control.Enabled && control is Button)
+            {
+                toolTip1.Show(toolTip1.GetToolTip(control), this, e.Location);
+            }
+            else
+            {
+                toolTip1.Hide(this);
             }
         }
     }

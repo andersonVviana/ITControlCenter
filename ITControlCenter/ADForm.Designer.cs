@@ -614,6 +614,7 @@
             button4.TabIndex = 12;
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
+            button4.MouseHover += button4_MouseHover;
             // 
             // ADForm
             // 
@@ -639,6 +640,7 @@
             Name = "ADForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Active Directory";
+            MouseMove += ADForm_MouseMove;
             ADTC.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();

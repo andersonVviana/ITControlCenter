@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuFrm));
             pictureBox1 = new PictureBox();
             btnAD = new Button();
@@ -62,6 +63,7 @@
             pictureBox6 = new PictureBox();
             linkLabel3 = new LinkLabel();
             pictureBox5 = new PictureBox();
+            notifyIcon1 = new NotifyIcon(components);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -79,7 +81,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(3, 6);
+            pictureBox1.Location = new Point(3, 5);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(91, 81);
@@ -144,7 +146,7 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.ForeColor = Color.FromArgb(82, 37, 131);
             button1.Image = (Image)resources.GetObject("button1.Image");
-            button1.Location = new Point(872, 502);
+            button1.Location = new Point(872, 501);
             button1.Name = "button1";
             button1.Size = new Size(35, 39);
             button1.TabIndex = 8;
@@ -190,26 +192,27 @@
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label5);
             panel1.Controls.Add(label9);
-            panel1.Location = new Point(0, -2);
+            panel1.Location = new Point(0, -3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1135, 90);
+            panel1.Size = new Size(1135, 91);
             panel1.TabIndex = 11;
             // 
             // label10
             // 
             label10.AutoSize = true;
             label10.ForeColor = Color.White;
-            label10.Location = new Point(726, 24);
+            label10.Location = new Point(711, 19);
             label10.Name = "label10";
             label10.RightToLeft = RightToLeft.No;
             label10.Size = new Size(12, 20);
             label10.TabIndex = 26;
             label10.Text = ".";
+            label10.Click += label10_Click;
             // 
             // pictureBox3
             // 
             pictureBox3.InitialImage = null;
-            pictureBox3.Location = new Point(822, 6);
+            pictureBox3.Location = new Point(822, 5);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(85, 81);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
@@ -222,7 +225,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Lato Black", 18F, FontStyle.Bold);
             label8.ForeColor = Color.White;
-            label8.Location = new Point(103, 18);
+            label8.Location = new Point(103, 19);
             label8.Name = "label8";
             label8.Size = new Size(252, 36);
             label8.TabIndex = 22;
@@ -233,7 +236,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(103, 57);
+            label3.Location = new Point(105, 55);
             label3.Name = "label3";
             label3.Size = new Size(92, 20);
             label3.TabIndex = 12;
@@ -243,7 +246,7 @@
             // 
             label5.AutoSize = true;
             label5.ForeColor = Color.White;
-            label5.Location = new Point(192, 57);
+            label5.Location = new Point(194, 55);
             label5.Name = "label5";
             label5.Size = new Size(12, 20);
             label5.TabIndex = 14;
@@ -255,7 +258,7 @@
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 11F);
             label9.ForeColor = Color.White;
-            label9.Location = new Point(725, 44);
+            label9.Location = new Point(711, 39);
             label9.Name = "label9";
             label9.Size = new Size(16, 25);
             label9.TabIndex = 25;
@@ -277,7 +280,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(327, 58);
+            label4.Location = new Point(327, 59);
             label4.Name = "label4";
             label4.Size = new Size(0, 20);
             label4.TabIndex = 13;
@@ -296,7 +299,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            label7.Location = new Point(803, 118);
+            label7.Location = new Point(803, 117);
             label7.Name = "label7";
             label7.Size = new Size(51, 23);
             label7.TabIndex = 16;
@@ -306,7 +309,7 @@
             // 
             linkLabel1.AutoSize = true;
             linkLabel1.LinkColor = Color.FromArgb(82, 37, 131);
-            linkLabel1.Location = new Point(47, 10);
+            linkLabel1.Location = new Point(47, 11);
             linkLabel1.Name = "linkLabel1";
             linkLabel1.Size = new Size(109, 20);
             linkLabel1.TabIndex = 17;
@@ -321,7 +324,7 @@
             panel2.Controls.Add(linkLabel1);
             panel2.Location = new Point(18, 36);
             panel2.Name = "panel2";
-            panel2.Size = new Size(159, 41);
+            panel2.Size = new Size(175, 41);
             panel2.TabIndex = 21;
             // 
             // pictureBox2
@@ -341,9 +344,9 @@
             groupBox1.Controls.Add(btnHI);
             groupBox1.Controls.Add(btnAD);
             groupBox1.Controls.Add(button2);
-            groupBox1.Location = new Point(12, 130);
+            groupBox1.Location = new Point(11, 131);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(192, 274);
+            groupBox1.Size = new Size(192, 275);
             groupBox1.TabIndex = 23;
             groupBox1.TabStop = false;
             groupBox1.Text = "Menu";
@@ -358,7 +361,7 @@
             button4.ForeColor = Color.White;
             button4.Image = (Image)resources.GetObject("button4.Image");
             button4.ImageAlign = ContentAlignment.MiddleRight;
-            button4.Location = new Point(10, 126);
+            button4.Location = new Point(10, 125);
             button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
             button4.Size = new Size(173, 39);
@@ -390,7 +393,7 @@
             // 
             label11.AutoSize = true;
             label11.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label11.Location = new Point(12, 97);
+            label11.Location = new Point(11, 97);
             label11.Name = "label11";
             label11.Size = new Size(13, 20);
             label11.TabIndex = 24;
@@ -404,13 +407,13 @@
             panel3.Controls.Add(panel2);
             panel3.Location = new Point(730, 152);
             panel3.Name = "panel3";
-            panel3.Size = new Size(180, 80);
+            panel3.Size = new Size(196, 80);
             panel3.TabIndex = 22;
             // 
             // pictureBox4
             // 
             pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(28, 3);
+            pictureBox4.Location = new Point(27, 3);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(35, 33);
             pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
@@ -422,7 +425,7 @@
             linkLabel4.AutoSize = true;
             linkLabel4.ImageAlign = ContentAlignment.MiddleRight;
             linkLabel4.LinkColor = Color.FromArgb(82, 37, 131);
-            linkLabel4.Location = new Point(64, 10);
+            linkLabel4.Location = new Point(64, 11);
             linkLabel4.Name = "linkLabel4";
             linkLabel4.RightToLeft = RightToLeft.No;
             linkLabel4.Size = new Size(36, 20);
@@ -438,9 +441,9 @@
             panel4.Controls.Add(panel5);
             panel4.Controls.Add(pictureBox5);
             panel4.Controls.Add(linkLabel2);
-            panel4.Location = new Point(748, 229);
+            panel4.Location = new Point(747, 229);
             panel4.Name = "panel4";
-            panel4.Size = new Size(170, 87);
+            panel4.Size = new Size(171, 89);
             panel4.TabIndex = 22;
             // 
             // panel5
@@ -448,9 +451,9 @@
             panel5.AutoSize = true;
             panel5.Controls.Add(pictureBox6);
             panel5.Controls.Add(linkLabel3);
-            panel5.Location = new Point(3, 42);
+            panel5.Location = new Point(3, 43);
             panel5.Name = "panel5";
-            panel5.Size = new Size(164, 42);
+            panel5.Size = new Size(165, 43);
             panel5.TabIndex = 23;
             // 
             // pictureBox6
@@ -485,12 +488,18 @@
             pictureBox5.TabIndex = 21;
             pictureBox5.TabStop = false;
             // 
+            // notifyIcon1
+            // 
+            notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
+            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Visible = true;
+            // 
             // MenuFrm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(923, 550);
+            ClientSize = new Size(923, 549);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(label11);
@@ -565,5 +574,6 @@
         private Panel panel5;
         private PictureBox pictureBox6;
         private LinkLabel linkLabel3;
+        private NotifyIcon notifyIcon1;
     }
 }

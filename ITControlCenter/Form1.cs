@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Microsoft.Graph;
+using Microsoft.Graph.Models.TermStore;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
 using System.Xml;
@@ -25,13 +27,16 @@ namespace ITControlCenter
 
         private const string ApiKey = "09761fd8f3af97d8ec38b6204baf689e"; // Substitua com sua chave de API
         private const string BaseUrl = "http://api.openweathermap.org/data/2.5/weather";
-        private const string LocationUrl = "http://ip-api.com/json";
+        private const string GoogleApiKey = "AIzaSyBsauCGLP-9i3bXToSJ-FYEpJKJD0Qce6w";
+        private const string WeatherBaseUrl = "http://api.openweathermap.org/data/2.5/weather";
+        private const string GeolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
 
         public MenuFrm()
         {
             InitializeComponent();
             Load += new EventHandler(MenuFrm_Load);
             pictureBox3.Paint += PictureBox_Paint;
+            InitializeNotifyIcon();
         }
 
         private void btnAD_Click(object sender, EventArgs e)
@@ -49,12 +54,47 @@ namespace ITControlCenter
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            notifyIcon1.Visible = true;
+            notifyIcon1.ShowBalloonTip(3000, "Minimizado", "A aplicação foi minimizada para a área de notificação.", ToolTipIcon.Info);
+        }
+
+        private void InitializeNotifyIcon()
+        {
+            // Configure o NotifyIcon
+            notifyIcon1.Icon = new Icon("logo5.ico");
+            notifyIcon1.Text = "IT Control Center";
+            notifyIcon1.Visible = false;
+
+            // Adicione um menu de contexto ao NotifyIcon
+            var contextMenu = new ContextMenuStrip();
+            contextMenu.Items.Add("Restaurar", null, Restore);
+            contextMenu.Items.Add("Sair", null, Exit);
+            notifyIcon1.ContextMenuStrip = contextMenu;
+
+            // Configure o evento DoubleClick
+            notifyIcon1.DoubleClick += new EventHandler(Restore);
+        }
+
+        private void Restore(object sender, EventArgs e)
+        {
+            // Restaurar a aplicação
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        private void Exit(object sender, EventArgs e)
+        {
+            // Sair da aplicação
+            notifyIcon1.Visible = false;
             Application.Exit();
         }
 
         private async void MenuFrm_Load(object sender, EventArgs e)
         {
             await GetLocationAndWeatherData();
+
             DisplayCurrentDate();
 
             try
@@ -88,9 +128,10 @@ namespace ITControlCenter
 
         private async Task GetLocationAndWeatherData()
         {
-            string city = await GetLocation();
-            if (!string.IsNullOrWhiteSpace(city))
+            var location = await GetLocation();
+            if (location != null)
             {
+                var city = await GetCityFromCoordinates(location.Lat, location.Lng);
                 label10.Text = $"{city}";
                 await GetWeatherData(city);
             }
@@ -100,23 +141,47 @@ namespace ITControlCenter
             }
         }
 
-        private async Task<string> GetLocation()
+        private async Task<LocationResponse> GetLocation()
         {
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync(LocationUrl);
+                    var requestBody = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync($"{GeolocationUrl}{GoogleApiKey}", requestBody);
                     response.EnsureSuccessStatusCode();
 
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    LocationResponse locationResponse = JsonConvert.DeserializeObject<LocationResponse>(responseBody);
+                    GeolocationResponse geolocationResponse = JsonConvert.DeserializeObject<GeolocationResponse>(responseBody);
 
-                    return locationResponse.City;
+                    return geolocationResponse.Location;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error fetching location data: {ex.Message}");
+                    return null;
+                }
+            }
+        }
+
+        private async Task<string> GetCityFromCoordinates(double lat, double lon)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    string url = $"{WeatherBaseUrl}?lat={lat}&lon={lon}&appid={ApiKey}&units=metric";
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(responseBody);
+
+                    return weatherResponse.Name;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error fetching city data: {ex.Message}");
                     return null;
                 }
             }
@@ -276,7 +341,7 @@ namespace ITControlCenter
             {
                 try
                 {
-                    string url = $"{BaseUrl}?q={city}&appid={ApiKey}&units=metric";
+                    string url = $"{WeatherBaseUrl}?q={city}&appid={ApiKey}&units=metric";
                     HttpResponseMessage response = await client.GetAsync(url);
                     response.EnsureSuccessStatusCode();
 
@@ -317,10 +382,12 @@ namespace ITControlCenter
             }
         }
 
+
         public class WeatherResponse
         {
             public WeatherInfo[] Weather { get; set; }
             public MainInfo Main { get; set; }
+            public string Name { get; set; }
         }
 
         public class WeatherInfo
@@ -333,12 +400,23 @@ namespace ITControlCenter
             public float Temp { get; set; }
         }
 
+        public class GeolocationResponse
+        {
+            public LocationResponse Location { get; set; }
+        }
+
         public class LocationResponse
         {
-            public string City { get; set; }
+            public double Lat { get; set; }
+            public double Lng { get; set; }
         }
 
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
         {
 
         }

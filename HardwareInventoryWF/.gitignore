@@ -1,0 +1,58 @@
+﻿# Build Folders
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Specific Files
+.vs/
+*.sln
+*.user
+*.suo
+*.ide
+
+# Visual Studio Project Files
+*.csproj.user
+*.vbproj.user
+
+# Temporary files
+*.tmp
+*.temp
+
+# Visual Studio Code settings
+.vscode/
+
+# Rider specific files
+.idea/
+
+# NCrunch
+*.ncrunch*
+*.*.ncrunch*
+*.ncrunchsolution
+
+# Logs
+*.log
+
+# Publish output
+publish/
+
+# User specific files
+*.pdb
+*.cache
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.jfm.user
+
+# Resharper
+_ReSharper*/
+*.DotSettings
+
+# SQL Server Data Tools
+*.dacpac
+*.sqlproj.user
+
+# User-specific files
+*.userprefs
+
+# Ignore NuGet packages
+*.nupkg
+**/packages/*

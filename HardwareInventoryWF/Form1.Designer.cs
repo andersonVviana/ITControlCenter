@@ -30,24 +30,27 @@ namespace HardwareInventoryWF
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea16 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend16 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea17 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend17 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series17 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea18 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend18 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series18 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea19 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend19 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea20 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend20 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea71 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend71 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series71 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea72 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend72 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series72 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea73 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend73 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series73 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea74 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend74 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series74 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea76 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend76 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series76 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea75 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend75 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series75 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel1 = new System.Windows.Forms.Panel();
             this.materialButton11 = new FontAwesome.Sharp.Material.MaterialButton();
             this.materialButton6 = new FontAwesome.Sharp.Material.MaterialButton();
@@ -97,6 +100,12 @@ namespace HardwareInventoryWF
             this.panel2 = new System.Windows.Forms.Panel();
             this.chart5 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.materialButton12 = new FontAwesome.Sharp.Material.MaterialButton();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.chart6 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -116,6 +125,7 @@ namespace HardwareInventoryWF
             this.panel12.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart6)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -260,16 +270,16 @@ namespace HardwareInventoryWF
             // chart1
             // 
             this.chart1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.Center;
-            chartArea16.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea16);
-            legend16.Name = "Legend1";
-            this.chart1.Legends.Add(legend16);
+            chartArea71.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea71);
+            legend71.Name = "Legend1";
+            this.chart1.Legends.Add(legend71);
             this.chart1.Location = new System.Drawing.Point(27, 171);
             this.chart1.Name = "chart1";
-            series16.ChartArea = "ChartArea1";
-            series16.Legend = "Legend1";
-            series16.Name = "Series1";
-            this.chart1.Series.Add(series16);
+            series71.ChartArea = "ChartArea1";
+            series71.Legend = "Legend1";
+            series71.Name = "Series1";
+            this.chart1.Series.Add(series71);
             this.chart1.Size = new System.Drawing.Size(555, 371);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
@@ -277,48 +287,48 @@ namespace HardwareInventoryWF
             // chart2
             // 
             this.chart2.BorderlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
-            chartArea17.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea17);
-            legend17.Name = "Legend1";
-            this.chart2.Legends.Add(legend17);
+            chartArea72.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea72);
+            legend72.Name = "Legend1";
+            this.chart2.Legends.Add(legend72);
             this.chart2.Location = new System.Drawing.Point(27, 612);
             this.chart2.Name = "chart2";
-            series17.ChartArea = "ChartArea1";
-            series17.Legend = "Legend1";
-            series17.Name = "Series1";
-            this.chart2.Series.Add(series17);
+            series72.ChartArea = "ChartArea1";
+            series72.Legend = "Legend1";
+            series72.Name = "Series1";
+            this.chart2.Series.Add(series72);
             this.chart2.Size = new System.Drawing.Size(555, 371);
             this.chart2.TabIndex = 3;
             this.chart2.Text = "chart2";
             // 
             // chart4
             // 
-            chartArea18.Name = "ChartArea1";
-            this.chart4.ChartAreas.Add(chartArea18);
-            legend18.Name = "Legend1";
-            this.chart4.Legends.Add(legend18);
+            chartArea73.Name = "ChartArea1";
+            this.chart4.ChartAreas.Add(chartArea73);
+            legend73.Name = "Legend1";
+            this.chart4.Legends.Add(legend73);
             this.chart4.Location = new System.Drawing.Point(645, 170);
             this.chart4.Name = "chart4";
-            series18.ChartArea = "ChartArea1";
-            series18.Legend = "Legend1";
-            series18.Name = "Series1";
-            this.chart4.Series.Add(series18);
+            series73.ChartArea = "ChartArea1";
+            series73.Legend = "Legend1";
+            series73.Name = "Series1";
+            this.chart4.Series.Add(series73);
             this.chart4.Size = new System.Drawing.Size(555, 371);
             this.chart4.TabIndex = 4;
             this.chart4.Text = "chart4";
             // 
             // chart3
             // 
-            chartArea19.Name = "ChartArea1";
-            this.chart3.ChartAreas.Add(chartArea19);
-            legend19.Name = "Legend1";
-            this.chart3.Legends.Add(legend19);
+            chartArea74.Name = "ChartArea1";
+            this.chart3.ChartAreas.Add(chartArea74);
+            legend74.Name = "Legend1";
+            this.chart3.Legends.Add(legend74);
             this.chart3.Location = new System.Drawing.Point(645, 612);
             this.chart3.Name = "chart3";
-            series19.ChartArea = "ChartArea1";
-            series19.Legend = "Legend1";
-            series19.Name = "Series1";
-            this.chart3.Series.Add(series19);
+            series74.ChartArea = "ChartArea1";
+            series74.Legend = "Legend1";
+            series74.Name = "Series1";
+            this.chart3.Series.Add(series74);
             this.chart3.Size = new System.Drawing.Size(555, 371);
             this.chart3.TabIndex = 5;
             this.chart3.Text = "chart3";
@@ -326,6 +336,7 @@ namespace HardwareInventoryWF
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            this.panel3.Controls.Add(this.label16);
             this.panel3.Controls.Add(this.iconButton1);
             this.panel3.Controls.Add(this.label5);
             this.panel3.Location = new System.Drawing.Point(27, 568);
@@ -338,7 +349,7 @@ namespace HardwareInventoryWF
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(97, 7);
+            this.label5.Location = new System.Drawing.Point(49, 7);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(395, 24);
             this.label5.TabIndex = 8;
@@ -352,7 +363,7 @@ namespace HardwareInventoryWF
             this.iconButton1.IconColor = System.Drawing.Color.White;
             this.iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconButton1.IconSize = 30;
-            this.iconButton1.Location = new System.Drawing.Point(43, 3);
+            this.iconButton1.Location = new System.Drawing.Point(-5, 3);
             this.iconButton1.Name = "iconButton1";
             this.iconButton1.Size = new System.Drawing.Size(54, 32);
             this.iconButton1.TabIndex = 9;
@@ -361,6 +372,7 @@ namespace HardwareInventoryWF
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            this.panel4.Controls.Add(this.label15);
             this.panel4.Controls.Add(this.materialButton9);
             this.panel4.Controls.Add(this.label3);
             this.panel4.Location = new System.Drawing.Point(27, 127);
@@ -373,7 +385,7 @@ namespace HardwareInventoryWF
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(114, 7);
+            this.label3.Location = new System.Drawing.Point(46, 7);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(359, 24);
             this.label3.TabIndex = 8;
@@ -385,7 +397,7 @@ namespace HardwareInventoryWF
             this.materialButton9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.materialButton9.IconChar = FontAwesome.Sharp.MaterialIcons.Screwdriver;
             this.materialButton9.IconColor = System.Drawing.Color.White;
-            this.materialButton9.Location = new System.Drawing.Point(64, 3);
+            this.materialButton9.Location = new System.Drawing.Point(-4, 3);
             this.materialButton9.Name = "materialButton9";
             this.materialButton9.Size = new System.Drawing.Size(54, 34);
             this.materialButton9.TabIndex = 11;
@@ -394,6 +406,7 @@ namespace HardwareInventoryWF
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            this.panel5.Controls.Add(this.label14);
             this.panel5.Controls.Add(this.materialButton8);
             this.panel5.Controls.Add(this.label4);
             this.panel5.Location = new System.Drawing.Point(645, 127);
@@ -406,7 +419,7 @@ namespace HardwareInventoryWF
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(247, 7);
+            this.label4.Location = new System.Drawing.Point(52, 7);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 24);
             this.label4.TabIndex = 8;
@@ -418,7 +431,7 @@ namespace HardwareInventoryWF
             this.materialButton8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.materialButton8.IconChar = FontAwesome.Sharp.MaterialIcons.Laptop;
             this.materialButton8.IconColor = System.Drawing.Color.White;
-            this.materialButton8.Location = new System.Drawing.Point(196, 3);
+            this.materialButton8.Location = new System.Drawing.Point(1, 3);
             this.materialButton8.Name = "materialButton8";
             this.materialButton8.Size = new System.Drawing.Size(54, 34);
             this.materialButton8.TabIndex = 10;
@@ -427,6 +440,7 @@ namespace HardwareInventoryWF
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            this.panel6.Controls.Add(this.label17);
             this.panel6.Controls.Add(this.iconButton2);
             this.panel6.Controls.Add(this.label6);
             this.panel6.Location = new System.Drawing.Point(645, 568);
@@ -439,7 +453,7 @@ namespace HardwareInventoryWF
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(152, 7);
+            this.label6.Location = new System.Drawing.Point(52, 7);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(259, 24);
             this.label6.TabIndex = 9;
@@ -453,7 +467,7 @@ namespace HardwareInventoryWF
             this.iconButton2.IconColor = System.Drawing.Color.White;
             this.iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconButton2.IconSize = 30;
-            this.iconButton2.Location = new System.Drawing.Point(102, 3);
+            this.iconButton2.Location = new System.Drawing.Point(2, 3);
             this.iconButton2.Name = "iconButton2";
             this.iconButton2.Size = new System.Drawing.Size(54, 32);
             this.iconButton2.TabIndex = 10;
@@ -462,6 +476,7 @@ namespace HardwareInventoryWF
             // panel7
             // 
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            this.panel7.Controls.Add(this.label13);
             this.panel7.Controls.Add(this.materialButton7);
             this.panel7.Controls.Add(this.label7);
             this.panel7.Location = new System.Drawing.Point(1246, 127);
@@ -474,7 +489,7 @@ namespace HardwareInventoryWF
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(137, 7);
+            this.label7.Location = new System.Drawing.Point(52, 7);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(139, 24);
             this.label7.TabIndex = 8;
@@ -486,7 +501,7 @@ namespace HardwareInventoryWF
             this.materialButton7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.materialButton7.IconChar = FontAwesome.Sharp.MaterialIcons.DesktopTower;
             this.materialButton7.IconColor = System.Drawing.Color.White;
-            this.materialButton7.Location = new System.Drawing.Point(85, 3);
+            this.materialButton7.Location = new System.Drawing.Point(0, 3);
             this.materialButton7.Name = "materialButton7";
             this.materialButton7.Size = new System.Drawing.Size(54, 34);
             this.materialButton7.TabIndex = 11;
@@ -507,11 +522,11 @@ namespace HardwareInventoryWF
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Lato Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(137, 7);
+            this.label8.Location = new System.Drawing.Point(55, 7);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(183, 24);
+            this.label8.Size = new System.Drawing.Size(165, 24);
             this.label8.TabIndex = 8;
-            this.label8.Text = "Service Equipment";
+            this.label8.Text = "Servers and VMs";
             // 
             // materialButton10
             // 
@@ -519,7 +534,7 @@ namespace HardwareInventoryWF
             this.materialButton10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.materialButton10.IconChar = FontAwesome.Sharp.MaterialIcons.Alert;
             this.materialButton10.IconColor = System.Drawing.Color.White;
-            this.materialButton10.Location = new System.Drawing.Point(85, 3);
+            this.materialButton10.Location = new System.Drawing.Point(3, 3);
             this.materialButton10.Name = "materialButton10";
             this.materialButton10.Size = new System.Drawing.Size(54, 34);
             this.materialButton10.TabIndex = 12;
@@ -532,38 +547,38 @@ namespace HardwareInventoryWF
             this.dataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView2.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dataGridView2.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            dataGridViewCellStyle43.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle43.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle43.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            dataGridViewCellStyle43.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(37)))), ((int)(((byte)(131)))));
+            dataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle43;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Lato", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(243)))), ((int)(((byte)(240)))));
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle44.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle44.Font = new System.Drawing.Font("Lato", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle44.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle44.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(243)))), ((int)(((byte)(240)))));
+            dataGridViewCellStyle44.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle44;
             this.dataGridView2.EnableHeadersVisualStyles = false;
             this.dataGridView2.Location = new System.Drawing.Point(1271, 613);
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
             this.dataGridView2.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle45.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle45.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle45;
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView2.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -685,6 +700,7 @@ namespace HardwareInventoryWF
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.chart6);
             this.panel2.Controls.Add(this.materialButton12);
             this.panel2.Controls.Add(this.chart5);
             this.panel2.Controls.Add(this.panel16);
@@ -716,16 +732,16 @@ namespace HardwareInventoryWF
             // 
             // chart5
             // 
-            chartArea20.Name = "ChartArea1";
-            this.chart5.ChartAreas.Add(chartArea20);
-            legend20.Name = "Legend1";
-            this.chart5.Legends.Add(legend20);
+            chartArea76.Name = "ChartArea1";
+            this.chart5.ChartAreas.Add(chartArea76);
+            legend76.Name = "Legend1";
+            this.chart5.Legends.Add(legend76);
             this.chart5.Location = new System.Drawing.Point(1249, 171);
             this.chart5.Name = "chart5";
-            series20.ChartArea = "ChartArea1";
-            series20.Legend = "Legend1";
-            series20.Name = "Series1";
-            this.chart5.Series.Add(series20);
+            series76.ChartArea = "ChartArea1";
+            series76.Legend = "Legend1";
+            series76.Name = "Series1";
+            this.chart5.Series.Add(series76);
             this.chart5.Size = new System.Drawing.Size(492, 371);
             this.chart5.TabIndex = 28;
             this.chart5.Text = "chart5";
@@ -746,6 +762,77 @@ namespace HardwareInventoryWF
             this.materialButton12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.materialButton12.UseVisualStyleBackColor = true;
             this.materialButton12.Click += new System.EventHandler(this.materialButton12_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(389, 8);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(14, 20);
+            this.label13.TabIndex = 12;
+            this.label13.Text = ".";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(451, 8);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(14, 20);
+            this.label14.TabIndex = 13;
+            this.label14.Text = ".";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(454, 9);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(14, 20);
+            this.label15.TabIndex = 14;
+            this.label15.Text = ".";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.Color.White;
+            this.label16.Location = new System.Drawing.Point(454, 11);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(14, 20);
+            this.label16.TabIndex = 15;
+            this.label16.Text = ".";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.ForeColor = System.Drawing.Color.White;
+            this.label17.Location = new System.Drawing.Point(451, 11);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(14, 20);
+            this.label17.TabIndex = 16;
+            this.label17.Text = ".";
+            // 
+            // chart6
+            // 
+            chartArea75.Name = "ChartArea1";
+            this.chart6.ChartAreas.Add(chartArea75);
+            legend75.Name = "Legend1";
+            this.chart6.Legends.Add(legend75);
+            this.chart6.Location = new System.Drawing.Point(1249, 613);
+            this.chart6.Name = "chart6";
+            series75.ChartArea = "ChartArea1";
+            series75.Legend = "Legend1";
+            series75.Name = "Series1";
+            this.chart6.Series.Add(series75);
+            this.chart6.Size = new System.Drawing.Size(492, 371);
+            this.chart6.TabIndex = 30;
+            this.chart6.Text = "chart6";
             // 
             // Form1
             // 
@@ -791,6 +878,7 @@ namespace HardwareInventoryWF
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart6)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -846,6 +934,12 @@ namespace HardwareInventoryWF
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart5;
         private FontAwesome.Sharp.Material.MaterialButton materialButton12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart6;
     }
 }
 

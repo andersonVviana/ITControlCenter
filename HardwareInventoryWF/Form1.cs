@@ -411,10 +411,9 @@ namespace HardwareInventoryWF
             string query = @"
             SELECT 
                 CASE
-                    WHEN Name LIKE 'ABNB%' THEN 'Notebook'
+                    WHEN Name LIKE 'ABNB%' THEN 'Laptop'
                     WHEN Name LIKE 'ABWS%' THEN 'Desktop'
                     WHEN Name LIKE 'ABTC%' THEN 'ThinClient'
-                    WHEN Name LIKE 'ARCADE%' THEN 'Servidor'
                     ELSE 'Other'
                 END AS Category,
                 COUNT(DISTINCT Name) AS Qty
@@ -424,10 +423,10 @@ namespace HardwareInventoryWF
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY 
                 CASE
-                    WHEN Name LIKE 'ABNB%' THEN 'Notebook'
+                    WHEN Name LIKE 'ABNB%' THEN 'Laptop'
                     WHEN Name LIKE 'ABWS%' THEN 'Desktop'
                     WHEN Name LIKE 'ABTC%' THEN 'ThinClient'
-                    WHEN Name LIKE 'ARCADE%' THEN 'Servidor'
+
                     ELSE 'Other'
                 END
             ORDER BY Qty DESC;
@@ -491,7 +490,6 @@ namespace HardwareInventoryWF
         {
             var conn = connectionString;
 
-
             // SQL para obter a quantidade de equipamentos por sistema operacional
             string query = @"
             SELECT 
@@ -525,9 +523,10 @@ namespace HardwareInventoryWF
                         ChartType = SeriesChartType.Column,
                         IsValueShownAsLabel = true,
                         LabelForeColor = Color.Black,
-                        Color = Color.FromArgb(82,37,131)
-
+                        Color = Color.FromArgb(82, 37, 131)
                     };
+
+                    int totalEquipamentos = 0; // Variável para armazenar o total de equipamentos
 
                     // Adicionar dados ao gráfico
                     while (reader.Read())
@@ -535,6 +534,8 @@ namespace HardwareInventoryWF
                         string sistemaOperacional = reader["OperatingSystem"].ToString();
                         int quantidade = Convert.ToInt32(reader["Qty"]);
                         series.Points.AddXY(sistemaOperacional, quantidade);
+
+                        totalEquipamentos += quantidade; // Acumular a quantidade total
                     }
 
                     // Adicionar a série ao gráfico
@@ -549,6 +550,9 @@ namespace HardwareInventoryWF
 
                     chart3.Legends.Clear();
 
+                    // Atualizar o label com o total de equipamentos
+                    label17.Text = "Total: " + totalEquipamentos;
+
                     // Fechar o leitor de dados
                     reader.Close();
                 }
@@ -558,6 +562,7 @@ namespace HardwareInventoryWF
                 }
             }
         }
+
 
         private void LoadDataWarranty()
         {
@@ -571,8 +576,7 @@ namespace HardwareInventoryWF
             WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
               AND (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
               AND WarrantyDateTo IS NOT NULL
-              AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR 
-                   Status = 'Atestado / Licença' OR Status = 'Em Análise')
+              AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY WarrantyDateTo
             ORDER BY Qty DESC;
     ";
@@ -657,6 +661,11 @@ namespace HardwareInventoryWF
                     // Adicionar a série ao gráfico
                     chart5.Series.Add(series);
 
+                    label13.Text = $"Total: {total}";
+                    label14.Text = $"Total: {total}";
+                    label15.Text = $"Total: {total}";
+                    label16.Text = $"Total: {total}";
+
                     // Configuração da área do gráfico
                     ChartArea chartArea = chart5.ChartAreas[0];
                     chartArea.AxisX.MajorGrid.LineWidth = 0;
@@ -705,7 +714,7 @@ namespace HardwareInventoryWF
                             Model,
                             ROW_NUMBER() OVER (PARTITION BY Name, Serial ORDER BY TraceDateTime DESC) AS RowNum
                         FROM CONSOLIDATED_HARDWARE_INV
-                        WHERE (Name IS NOT NULL AND Name <> '') AND Status = 'Disponível no TI'
+                        WHERE (Name IS NOT NULL AND Name <> '') AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
                     )
                     SELECT 
                         Name,

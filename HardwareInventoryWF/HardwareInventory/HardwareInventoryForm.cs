@@ -46,66 +46,65 @@ namespace HardwareInventoryWF.HardwareInventory
                 {
                     connection.Open();
 
-                    // Substitua sua consulta SQL abaixo
                     string query = @"
-					WITH LatestHardware AS (
-                            SELECT 
-                                HIH.Name,
-                                HIH.Status,
-                                HIH.OperatingSystem,
-                                HIH.ServicePack,
-                                HIH.TraceDateTime,
-                                HIH.UserLogged,
-                                HIH.DisplayName,
-                                HIH.ipv4Address,
-                                HIH.Department,
-                                HIH.Description,
-                                HIH.Office,
-                                HIH.Manufacturer,
-                                HIH.Model,
-                                HIH.Serial,
-                                HIH.NumberOfCores,
-                                HIH.ProcessorManufacturer,
-                                HIH.ProcessorName,
-                                HIH.RAM,
-                                HIH.DiskDrive,
-                                HIH.Size,
-                                HIH.Graphics,
-                                HIH.GraphicsRAM,
-                                HIH.Processed,
-                                HIH.WarrantyDateTo,
-                                ROW_NUMBER() OVER (PARTITION BY HIH.Name ORDER BY HIH.TraceDateTime DESC) AS RowNum
-                            FROM CONSOLIDATED_HARDWARE_INV HIH
-                            WHERE (Name IS NOT NULL AND Name <> '')
-                        )
-                        SELECT 
-                            Name,
-                            Status,
-                            OperatingSystem,
-                            ServicePack,
-                            TraceDateTime,
-                            UserLogged,
-                            DisplayName,
-                            ipv4Address,
-                            Department,
-                            Description,
-                            Office,
-                            Manufacturer,
-                            Model,
-                            Serial,
-                            NumberOfCores,
-                            ProcessorManufacturer,
-                            ProcessorName,
-                            RAM,
-                            DiskDrive,
-                            Size,
-                            Graphics,
-                            GraphicsRAM,
-                            Processed,
-                            WarrantyDateTo
-                        FROM LatestHardware
-                        WHERE RowNum = 1
-                        ORDER BY TraceDateTime DESC;";
+                WITH LatestHardware AS (
+                    SELECT 
+                        HIH.Name,
+                        HIH.Status,
+                        HIH.OperatingSystem,
+                        HIH.ServicePack,
+                        HIH.TraceDateTime,
+                        HIH.UserLogged,
+                        HIH.DisplayName,
+                        HIH.ipv4Address,
+                        HIH.Department,
+                        HIH.Description,
+                        HIH.Office,
+                        HIH.Manufacturer,
+                        HIH.Model,
+                        HIH.Serial,
+                        HIH.NumberOfCores,
+                        HIH.ProcessorManufacturer,
+                        HIH.ProcessorName,
+                        HIH.RAM,
+                        HIH.DiskDrive,
+                        HIH.Size,
+                        HIH.Graphics,
+                        HIH.GraphicsRAM,
+                        HIH.Processed,
+                        HIH.WarrantyDateTo,
+                        ROW_NUMBER() OVER (PARTITION BY HIH.Name ORDER BY HIH.TraceDateTime DESC) AS RowNum
+                    FROM CONSOLIDATED_HARDWARE_INV HIH
+                    WHERE (Name IS NOT NULL AND Name <> '')
+                )
+                SELECT 
+                    Name,
+                    Status,
+                    OperatingSystem,
+                    ServicePack,
+                    TraceDateTime,
+                    UserLogged,
+                    DisplayName,
+                    ipv4Address,
+                    Department,
+                    Description,
+                    Office,
+                    Manufacturer,
+                    Model,
+                    Serial,
+                    NumberOfCores,
+                    ProcessorManufacturer,
+                    ProcessorName,
+                    RAM,
+                    DiskDrive,
+                    Size,
+                    Graphics,
+                    GraphicsRAM,
+                    Processed,
+                    WarrantyDateTo
+                FROM LatestHardware
+                WHERE RowNum = 1
+                ORDER BY TraceDateTime DESC;";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -115,6 +114,11 @@ namespace HardwareInventoryWF.HardwareInventory
 
                         // Define a fonte de dados do DataGridView
                         dataGridView1.DataSource = dataTable;
+
+                        // Chama o novo método para contar os IPs com base no status
+                        ContarIPs(dataTable);
+
+                        ContarTiposPorFaixaIP(dataTable);
                     }
                 }
                 catch (Exception ex)
@@ -123,6 +127,105 @@ namespace HardwareInventoryWF.HardwareInventory
                 }
             }
         }
+
+        private void ContarIPs(DataTable dataTable)
+        {
+            // Inicializar contadores
+            int totalIPs_0_20_21 = 0, totalIPs_3 = 0;
+
+            // Lista de status permitidos
+            var statusPermitidos = new List<string>
+            {
+                "Ativo", "Disponível no TI", "Na Assistência Técnica",
+                "Atestado / Licença", "Em Análise"
+            };
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                string status = row["Status"]?.ToString().Trim();
+                string ip = row["ipv4Address"]?.ToString().Trim();
+
+                // Verificar se o status é permitido
+                if (!statusPermitidos.Contains(status)) continue;
+
+                // Verificar faixa de IP
+                if (ip.StartsWith("192.168.0.") || ip.StartsWith("192.168.1.") || ip.StartsWith("192.168.21.") || ip.StartsWith("192.168.20."))
+                    totalIPs_0_20_21++;
+                else if (ip.StartsWith("192.168.3."))
+                    totalIPs_3++;
+            }
+
+            // Atualizar as TextBoxes com os resultados
+            textBox2.Text = totalIPs_0_20_21.ToString();
+            textBox3.Text = totalIPs_3.ToString();
+        }
+
+
+        private void ContarTiposPorFaixaIP(DataTable dataTable)
+        {
+            // Inicializar contadores
+            int laptops_0_20_21 = 0, laptops_3 = 0;
+            int desktops_0_20_21 = 0, desktops_3 = 0;
+            int thinClients_0_20_21 = 0, thinClients_3 = 0;
+
+            // Lista de status permitidos
+            var statusPermitidos = new List<string>
+            {
+                "Ativo", "Disponível no TI", "Na Assistência Técnica",
+                "Atestado / Licença", "Em Análise"
+            };
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                string status = row["Status"]?.ToString().Trim();
+                string name = row["Name"]?.ToString().Trim();
+                string ip = row["ipv4Address"]?.ToString().Trim();
+
+                // Verificar se o status é permitido
+                if (!statusPermitidos.Contains(status)) continue;
+
+                // Verificar faixa de IP e tipo de dispositivo
+                if (ip.StartsWith("192.168.0.") || ip.StartsWith("192.168.1.") || ip.StartsWith("192.168.21.") || ip.StartsWith("192.168.20."))
+                {
+                    if (name.StartsWith("ABNB", StringComparison.InvariantCultureIgnoreCase))
+                        laptops_0_20_21++;
+                    else if (name.StartsWith("ABWS", StringComparison.InvariantCultureIgnoreCase))
+                        desktops_0_20_21++;
+                    else if (name.StartsWith("ABTC", StringComparison.InvariantCultureIgnoreCase))
+                        thinClients_0_20_21++;
+                }
+                else if (ip.StartsWith("192.168.3."))
+                {
+                    if (name.StartsWith("ABNB", StringComparison.InvariantCultureIgnoreCase))
+                        laptops_3++;
+                    else if (name.StartsWith("ABWS", StringComparison.InvariantCultureIgnoreCase))
+                        desktops_3++;
+                    else if (name.StartsWith("ABTC", StringComparison.InvariantCultureIgnoreCase))
+                        thinClients_3++;
+                }
+            }
+
+            // Exibir resultados para depuração
+            Console.WriteLine($"Laptops (192.168.0/20/21): {laptops_0_20_21}");
+            Console.WriteLine($"Laptops (192.168.3): {laptops_3}");
+            Console.WriteLine($"Desktops (192.168.0/20/21): {desktops_0_20_21}");
+            Console.WriteLine($"Desktops (192.168.3): {desktops_3}");
+            Console.WriteLine($"ThinClients (192.168.0/20/21): {thinClients_0_20_21}");
+            Console.WriteLine($"ThinClients (192.168.3): {thinClients_3}");
+
+            // Atualizar as TextBoxes com os resultados
+            textBox4.Text = laptops_0_20_21.ToString();
+            textBox5.Text = laptops_3.ToString();
+            textBox6.Text = desktops_0_20_21.ToString();
+            textBox7.Text = desktops_3.ToString();
+            textBox8.Text = thinClients_0_20_21.ToString();
+            textBox9.Text = thinClients_3.ToString();
+        }
+
+
+
+
+
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {

@@ -13,6 +13,8 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using HardwareInventoryWF.PrinterInventory;
+using HardwareInventoryWF.Contracts;
 
 namespace HardwareInventoryWF
 {
@@ -78,6 +80,7 @@ namespace HardwareInventoryWF
             LoadDataServers();
             LoadDataAvailable();
             LoadDataWarranty();
+            LoadDataPrinters();
         }
 
         #region RoundPanel
@@ -268,10 +271,9 @@ namespace HardwareInventoryWF
             string query = @"
             SELECT 
                 OperatingSystem, 
-                COUNT(DISTINCT Name) AS Qty
+                COUNT(*) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
-            WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
-              AND (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%' OR Name LIKE '')
+            WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY OperatingSystem
             ORDER BY Qty DESC;";
@@ -330,6 +332,81 @@ namespace HardwareInventoryWF
             }
         }
 
+        private void LoadDataPrinters()
+        {
+            var conn = connectionString;
+
+
+
+            // SQL para obter a quantidade de equipamentos por sistema operacional
+            string query = @"
+            select
+	            status,
+	            COUNT(*) as Qty
+            from 
+            PRINTER_INVENTORY
+            GROUP BY Status";
+
+            // Criar a conexão e o comando SQL
+            using (SqlConnection connection = new SqlConnection(conn))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                try
+                {
+                    // Abrir a conexão
+                    connection.Open();
+
+                    // Executar o comando e obter os dados
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    // Limpar séries do gráfico antes de adicionar novos dados
+                    chart6.Series.Clear();
+                    Series series = new Series
+                    {
+                        Name = "",
+                        ChartType = SeriesChartType.Column,
+                        IsValueShownAsLabel = true,
+                        LabelForeColor = Color.Black,
+                        Color = Color.FromArgb(82, 37, 131)
+
+                    };
+
+                    int totalEquipamentos = 0;
+
+                    // Adicionar dados ao gráfico
+                    while (reader.Read())
+                    {
+                        string sistemaOperacional = reader["status"].ToString();
+                        int quantidade = Convert.ToInt32(reader["Qty"]);
+                        series.Points.AddXY(sistemaOperacional, quantidade);
+
+                        totalEquipamentos += quantidade;
+                    }
+
+                    // Adicionar a série ao gráfico
+                    chart6.Series.Add(series);
+
+                    ChartArea chartArea = chart6.ChartAreas[0];
+                    chartArea.AxisX.MajorGrid.LineWidth = 0; // Remove as linhas verticais
+                    chartArea.AxisY.MajorGrid.LineColor = Color.Gray; // Cor das linhas horizontais
+                    chartArea.AxisY.MajorGrid.LineWidth = 1; // Largura das linhas horizontais
+                    chartArea.AxisX.MajorGrid.Enabled = false; // Desativa as linhas verticais (grade principal)
+                    chartArea.AxisY.MajorGrid.Enabled = true;
+
+                    chart6.Legends.Clear();
+
+                    label18.Text = "Total: " + totalEquipamentos;
+
+                    // Fechar o leitor de dados
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao acessar o banco de dados: " + ex.Message);
+                }
+            }
+        }
+
         private void LoadDataManufacter()
         {
             var conn = connectionString;
@@ -341,8 +418,7 @@ namespace HardwareInventoryWF
                 Manufacturer, 
                 COUNT(DISTINCT Name) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
-            WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
-              AND (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
+            WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY Manufacturer
             ORDER BY Qty DESC;
@@ -414,20 +490,16 @@ namespace HardwareInventoryWF
                     WHEN Name LIKE 'ABNB%' THEN 'Laptop'
                     WHEN Name LIKE 'ABWS%' THEN 'Desktop'
                     WHEN Name LIKE 'ABTC%' THEN 'ThinClient'
-                    ELSE 'Other'
                 END AS Category,
                 COUNT(DISTINCT Name) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
-            WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
-              AND (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
+            WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY 
                 CASE
                     WHEN Name LIKE 'ABNB%' THEN 'Laptop'
                     WHEN Name LIKE 'ABWS%' THEN 'Desktop'
                     WHEN Name LIKE 'ABTC%' THEN 'ThinClient'
-
-                    ELSE 'Other'
                 END
             ORDER BY Qty DESC;
             ";
@@ -496,8 +568,7 @@ namespace HardwareInventoryWF
                 OperatingSystem, 
                 COUNT(DISTINCT Name) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
-            WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
-              AND Name LIKE '%ARCADE%'
+            WHERE Name LIKE 'ARCADE%'
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY OperatingSystem
             ORDER BY Qty DESC;
@@ -573,8 +644,7 @@ namespace HardwareInventoryWF
                 WarrantyDateTo, 
                 COUNT(DISTINCT Name) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
-            WHERE YEAR(TraceDateTime) = YEAR(GETDATE())
-              AND (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
+            WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
               AND WarrantyDateTo IS NOT NULL
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
             GROUP BY WarrantyDateTo
@@ -597,7 +667,7 @@ namespace HardwareInventoryWF
                         Name = "Equipment Warranty",
                         ChartType = SeriesChartType.Pie,
                         IsValueShownAsLabel = true,  // Mostrar rótulos nas fatias
-                        LabelForeColor = Color.Black
+                        LabelForeColor = Color.White
                     };
 
                     while (reader.Read())
@@ -628,7 +698,7 @@ namespace HardwareInventoryWF
                         point.AxisLabel = "New Equipment";
                         point.Label = FormatLabel(novos);
                         point.LegendText = "New Equipment";  // Definir nome na legenda
-                        point.Color = Color.FromArgb(115, 57, 180);
+                        point.Color = Color.FromArgb(129, 41, 144);
                     }
 
                     if (meiaVida > 0)
@@ -637,7 +707,7 @@ namespace HardwareInventoryWF
                         point.AxisLabel = "Mid-life Equipment";
                         point.Label = FormatLabel(meiaVida);
                         point.LegendText = "Mid-life Equipment";  // Definir nome na legenda
-                        point.Color = Color.FromArgb(204, 0, 153);
+                        point.Color = Color.FromArgb(153, 50, 204);
                     }
 
                     if (fimDeVida > 0)
@@ -646,7 +716,7 @@ namespace HardwareInventoryWF
                         point.AxisLabel = "End of Life";
                         point.Label = FormatLabel(fimDeVida);
                         point.LegendText = "End of Life";  // Definir nome na legenda
-                        point.Color = Color.FromArgb(226, 143, 221);
+                        point.Color = Color.FromArgb(178, 99, 255);
                     }
 
                     if (obsoleto > 0)
@@ -655,7 +725,7 @@ namespace HardwareInventoryWF
                         point.AxisLabel = "Obsolete";
                         point.Label = FormatLabel(obsoleto);
                         point.LegendText = "Obsolete";  // Definir nome na legenda
-                        point.Color = Color.FromArgb(220, 215, 200);
+                        point.Color = Color.FromArgb(137, 62, 255);
                     }
 
                     // Adicionar a série ao gráfico
@@ -1229,6 +1299,29 @@ namespace HardwareInventoryWF
             LoadDataServers();
             LoadDataAvailable();
             LoadDataWarranty();
+            LoadDataPrinters();
+        }
+
+        private void materialButton3_Click(object sender, EventArgs e)
+        {
+            PrinterInventoryForm printerInventoryForm = new PrinterInventoryForm();
+
+            this.Hide();
+
+            printerInventoryForm.FormClosed += (s, args) => this.Show();
+
+            printerInventoryForm.Show();
+        }
+
+        private void materialButton4_Click(object sender, EventArgs e)
+        {
+            ContractsForm contractsForm = new ContractsForm();
+
+            this.Hide();
+
+            contractsForm.FormClosed += (s, args) => this.Show();
+
+            contractsForm.Show();
         }
     }
 }

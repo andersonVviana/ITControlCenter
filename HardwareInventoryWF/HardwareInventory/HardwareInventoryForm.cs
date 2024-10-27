@@ -30,6 +30,7 @@ namespace HardwareInventoryWF.HardwareInventory
             InitializeComponent();
 			LoadData();
             LoadDataAT();
+            LoadDataCountIps();
         }
 
         private void HardwareInventoryForm_MouseDown(object sender, MouseEventArgs e)
@@ -115,10 +116,6 @@ namespace HardwareInventoryWF.HardwareInventory
                         // Define a fonte de dados do DataGridView
                         dataGridView1.DataSource = dataTable;
 
-                        // Chama o novo método para contar os IPs com base no status
-                        ContarIPs(dataTable);
-
-                        ContarTiposPorFaixaIP(dataTable);
                     }
                 }
                 catch (Exception ex)
@@ -128,102 +125,73 @@ namespace HardwareInventoryWF.HardwareInventory
             }
         }
 
-        private void ContarIPs(DataTable dataTable)
+        private void LoadDataCountIps()
         {
-            // Inicializar contadores
-            int totalIPs_0_20_21 = 0, totalIPs_3 = 0;
-
-            // Lista de status permitidos
-            var statusPermitidos = new List<string>
+            try
             {
-                "Ativo", "Disponível no TI", "Na Assistência Técnica",
-                "Atestado / Licença", "Em Análise"
-            };
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                string status = row["Status"]?.ToString().Trim();
-                string ip = row["ipv4Address"]?.ToString().Trim();
-
-                // Verificar se o status é permitido
-                if (!statusPermitidos.Contains(status)) continue;
-
-                // Verificar faixa de IP
-                if (ip.StartsWith("192.168.0.") || ip.StartsWith("192.168.1.") || ip.StartsWith("192.168.21.") || ip.StartsWith("192.168.20."))
-                    totalIPs_0_20_21++;
-                else if (ip.StartsWith("192.168.3."))
-                    totalIPs_3++;
-            }
-
-            // Atualizar as TextBoxes com os resultados
-            textBox2.Text = totalIPs_0_20_21.ToString();
-            textBox3.Text = totalIPs_3.ToString();
-        }
-
-
-        private void ContarTiposPorFaixaIP(DataTable dataTable)
-        {
-            // Inicializar contadores
-            int laptops_0_20_21 = 0, laptops_3 = 0;
-            int desktops_0_20_21 = 0, desktops_3 = 0;
-            int thinClients_0_20_21 = 0, thinClients_3 = 0;
-
-            // Lista de status permitidos
-            var statusPermitidos = new List<string>
-            {
-                "Ativo", "Disponível no TI", "Na Assistência Técnica",
-                "Atestado / Licença", "Em Análise"
-            };
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                string status = row["Status"]?.ToString().Trim();
-                string name = row["Name"]?.ToString().Trim();
-                string ip = row["ipv4Address"]?.ToString().Trim();
-
-                // Verificar se o status é permitido
-                if (!statusPermitidos.Contains(status)) continue;
-
-                // Verificar faixa de IP e tipo de dispositivo
-                if (ip.StartsWith("192.168.0.") || ip.StartsWith("192.168.1.") || ip.StartsWith("192.168.21.") || ip.StartsWith("192.168.20."))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    if (name.StartsWith("ABNB", StringComparison.InvariantCultureIgnoreCase))
-                        laptops_0_20_21++;
-                    else if (name.StartsWith("ABWS", StringComparison.InvariantCultureIgnoreCase))
-                        desktops_0_20_21++;
-                    else if (name.StartsWith("ABTC", StringComparison.InvariantCultureIgnoreCase))
-                        thinClients_0_20_21++;
-                }
-                else if (ip.StartsWith("192.168.3."))
-                {
-                    if (name.StartsWith("ABNB", StringComparison.InvariantCultureIgnoreCase))
-                        laptops_3++;
-                    else if (name.StartsWith("ABWS", StringComparison.InvariantCultureIgnoreCase))
-                        desktops_3++;
-                    else if (name.StartsWith("ABTC", StringComparison.InvariantCultureIgnoreCase))
-                        thinClients_3++;
+                    conn.Open();
+
+                    string query = @"
+                    SELECT Name, ipv4Address 
+                    FROM CONSOLIDATED_HARDWARE_INV 
+                    WHERE 
+                        (Status LIKE '%Ativo%' OR 
+                         Status LIKE '%Atestado / Licença%' OR 
+                         Status LIKE '%Disponível no TI%' OR 
+                         Status LIKE '%Em Análise%' OR 
+                         Status LIKE '%Na Assistência Técnica%') 
+                    AND 
+                        (Name LIKE '%ABTC%' OR 
+                         Name LIKE '%ABNB%' OR 
+                         Name LIKE '%ABWS%'); ";
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    // Filtrar por planta (DMA e PLC)
+                    var dma = dataTable.AsEnumerable().Where(row =>
+                        row["ipv4Address"].ToString().StartsWith("192.168.0") ||
+                        row["ipv4Address"].ToString().StartsWith("192.168.1") ||
+                        row["ipv4Address"].ToString().StartsWith("192.168.20") ||
+                        row["ipv4Address"].ToString().StartsWith("192.168.21"));
+
+                    var plc = dataTable.AsEnumerable().Where(row =>
+                        row["ipv4Address"].ToString().StartsWith("192.168.3"));
+
+                    // Totais por planta
+                    int totalDMA = dma.Count();
+                    int totalPLC = plc.Count();
+
+                    // Contagens por tipo para DMA
+                    int laptopsDMA = dma.Count(row => row["Name"].ToString().StartsWith("ABNB"));
+                    int desktopsDMA = dma.Count(row => row["Name"].ToString().StartsWith("ABWS"));
+                    int thinClientsDMA = dma.Count(row => row["Name"].ToString().StartsWith("ABTC"));
+
+                    // Contagens por tipo para PLC
+                    int laptopsPLC = plc.Count(row => row["Name"].ToString().StartsWith("ABNB"));
+                    int desktopsPLC = plc.Count(row => row["Name"].ToString().StartsWith("ABWS"));
+                    int thinClientsPLC = plc.Count(row => row["Name"].ToString().StartsWith("ABTC"));
+
+                    // Exibe as contagens nos TextBoxes
+                    textBox2.Text = totalDMA.ToString();
+                    textBox3.Text = totalPLC.ToString();
+
+                    textBox4.Text = laptopsDMA.ToString();
+                    textBox6.Text = desktopsDMA.ToString();
+                    textBox8.Text = thinClientsDMA.ToString();
+
+                    textBox5.Text = laptopsPLC.ToString();
+                    textBox7.Text = desktopsPLC.ToString();
+                    textBox9.Text = thinClientsPLC.ToString();
                 }
             }
-
-            // Exibir resultados para depuração
-            Console.WriteLine($"Laptops (192.168.0/20/21): {laptops_0_20_21}");
-            Console.WriteLine($"Laptops (192.168.3): {laptops_3}");
-            Console.WriteLine($"Desktops (192.168.0/20/21): {desktops_0_20_21}");
-            Console.WriteLine($"Desktops (192.168.3): {desktops_3}");
-            Console.WriteLine($"ThinClients (192.168.0/20/21): {thinClients_0_20_21}");
-            Console.WriteLine($"ThinClients (192.168.3): {thinClients_3}");
-
-            // Atualizar as TextBoxes com os resultados
-            textBox4.Text = laptops_0_20_21.ToString();
-            textBox5.Text = laptops_3.ToString();
-            textBox6.Text = desktops_0_20_21.ToString();
-            textBox7.Text = desktops_3.ToString();
-            textBox8.Text = thinClients_0_20_21.ToString();
-            textBox9.Text = thinClients_3.ToString();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados: " + ex.Message);
+            }
         }
-
-
-
 
 
 
@@ -526,7 +494,107 @@ namespace HardwareInventoryWF.HardwareInventory
                 }
             }
         }
+
+        private void materialButton3_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                // Cria um DataTable para armazenar os dados do DataGridView
+                DataTable dt = new DataTable();
+
+                // Adiciona as colunas ao DataTable
+                foreach (DataGridViewColumn coluna in dataGridView1.Columns)
+                {
+                    dt.Columns.Add(coluna.HeaderText);
+                }
+
+                // Adiciona as linhas ao DataTable
+                foreach (DataGridViewRow linha in dataGridView1.Rows)
+                {
+                    if (!linha.IsNewRow)
+                    {
+                        DataRow row = dt.NewRow();
+                        for (int i = 0; i < dataGridView1.Columns.Count; i++)
+                        {
+                            row[i] = linha.Cells[i].Value ?? "";
+                        }
+                        dt.Rows.Add(row);
+                    }
+                }
+
+                // Cria um workbook do ClosedXML e adiciona o DataTable
+                using (XLWorkbook workbook = new XLWorkbook())
+                {
+                    // Cria um arquivo temporário para a planilha
+                    string tempFile = Path.Combine(Path.GetTempPath(), "Relatorio.xlsx");
+
+                    workbook.Worksheets.Add(dt, "Relatorio");
+                    workbook.SaveAs(tempFile);
+
+                    // Abre o Excel com a planilha gerada
+                    Process.Start(new ProcessStartInfo(tempFile) { UseShellExecute = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao exportar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void materialButton2_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void materialButton1_Click_1(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                // Obter a linha selecionada no DataGridView
+                DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+
+                // Obter os valores de Name e Serial da linha selecionada
+                string assetName = selectedRow.Cells["Name"].Value.ToString();
+                string serial = selectedRow.Cells["Serial"].Value.ToString();
+                string currentStatus = selectedRow.Cells["Status"].Value.ToString();
+
+                // Instanciar o formulário UpdateStatusForm
+                UpdateStatusForm updateForm = new UpdateStatusForm
+                {
+                    SelectedAssetName = assetName,
+                    SelectedSerial = serial,
+                    CurrentStatus = currentStatus
+                };
+
+                // Exibir o formulário
+                updateForm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Selecione uma linha antes de continuar.");
+            }
+        }
+
+        private void textBox1_KeyDown_1(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Chama o método para filtrar os dados no DataGridView
+                FilterData(textBox1.Text);
+            }
+        }
+
+        private void materialButton4_Click(object sender, EventArgs e)
+        {
+            CreateHIForm createHIForm = new CreateHIForm();
+
+            createHIForm.ShowDialog();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
-    
     
 }

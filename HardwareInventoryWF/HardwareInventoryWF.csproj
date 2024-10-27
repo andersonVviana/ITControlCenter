@@ -284,6 +284,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\ContractsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Contracts\ContractsForm.Designer.cs">
+      <DependentUpon>ContractsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts\CreateContractForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Contracts\CreateContractForm.Designer.cs">
+      <DependentUpon>CreateContractForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts\CreateSupllierForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Contracts\CreateSupllierForm.Designer.cs">
+      <DependentUpon>CreateSupllierForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts\EditSupplierForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Contracts\EditSupplierForm.Designer.cs">
+      <DependentUpon>EditSupplierForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard\RoundedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -292,6 +316,12 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HardwareInventory\CreateHIForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HardwareInventory\CreateHIForm.Designer.cs">
+      <DependentUpon>CreateHIForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HardwareInventory\HardwareInventoryForm.cs">
       <SubType>Form</SubType>
@@ -305,6 +335,24 @@
     <Compile Include="HardwareInventory\UpdateStatusForm.Designer.cs">
       <DependentUpon>UpdateStatusForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PrinterInventory\CRUDPrinterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrinterInventory\CRUDPrinterForm.Designer.cs">
+      <DependentUpon>CRUDPrinterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrinterInventory\EditPrinterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrinterInventory\EditPrinterForm.Designer.cs">
+      <DependentUpon>EditPrinterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrinterInventory\PrinterInventoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrinterInventory\PrinterInventoryForm.Designer.cs">
+      <DependentUpon>PrinterInventoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Teste.cs">
@@ -313,14 +361,38 @@
     <Compile Include="Teste.Designer.cs">
       <DependentUpon>Teste.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Contracts\ContractsForm.resx">
+      <DependentUpon>ContractsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Contracts\CreateContractForm.resx">
+      <DependentUpon>CreateContractForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Contracts\CreateSupllierForm.resx">
+      <DependentUpon>CreateSupllierForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Contracts\EditSupplierForm.resx">
+      <DependentUpon>EditSupplierForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HardwareInventory\CreateHIForm.resx">
+      <DependentUpon>CreateHIForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HardwareInventory\HardwareInventoryForm.resx">
       <DependentUpon>HardwareInventoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HardwareInventory\UpdateStatusForm.resx">
       <DependentUpon>UpdateStatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrinterInventory\CRUDPrinterForm.resx">
+      <DependentUpon>CRUDPrinterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrinterInventory\EditPrinterForm.resx">
+      <DependentUpon>EditPrinterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrinterInventory\PrinterInventoryForm.resx">
+      <DependentUpon>PrinterInventoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

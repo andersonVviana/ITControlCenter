@@ -1,16 +1,11 @@
 ﻿using ClosedXML.Excel;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HardwareInventoryWF.HardwareInventory
@@ -25,12 +20,14 @@ namespace HardwareInventoryWF.HardwareInventory
 
         string connectionString = "Server=ARCADE-DBDW01;Database=SQL_ARC_HARDWARE_INVENTORY;User Id=gateway;Password=2rD&2Bn?F4;";
 
+
         public HardwareInventoryForm()
         {
             InitializeComponent();
 			LoadData();
             LoadDataAT();
             LoadDataCountIps();
+            LoadDataAvailable();
         }
 
         private void HardwareInventoryForm_MouseDown(object sender, MouseEventArgs e)
@@ -73,6 +70,7 @@ namespace HardwareInventoryWF.HardwareInventory
                         HIH.Graphics,
                         HIH.GraphicsRAM,
                         HIH.Processed,
+                        HIH.WarrantyDateFrom,
                         HIH.WarrantyDateTo,
                         ROW_NUMBER() OVER (PARTITION BY HIH.Name ORDER BY HIH.TraceDateTime DESC) AS RowNum
                     FROM CONSOLIDATED_HARDWARE_INV HIH
@@ -102,6 +100,7 @@ namespace HardwareInventoryWF.HardwareInventory
                     Graphics,
                     GraphicsRAM,
                     Processed,
+                    WarrantyDateFrom,
                     WarrantyDateTo
                 FROM LatestHardware
                 WHERE RowNum = 1
@@ -242,6 +241,7 @@ namespace HardwareInventoryWF.HardwareInventory
                                 HIH.Graphics,
                                 HIH.GraphicsRAM,
                                 HIH.Processed,
+                                HIH.WarrantyDateFrom,
                                 HIH.WarrantyDateTo,
                                 ROW_NUMBER() OVER (PARTITION BY HIH.Name ORDER BY HIH.TraceDateTime DESC) AS RowNum
                             FROM CONSOLIDATED_HARDWARE_INV HIH
@@ -271,6 +271,7 @@ namespace HardwareInventoryWF.HardwareInventory
                             Graphics,
                             GraphicsRAM,
                             Processed,
+                            WarrantyDateFrom,
                             WarrantyDateTo
                         FROM LatestHardware
                         WHERE RowNum = 1
@@ -305,6 +306,7 @@ namespace HardwareInventoryWF.HardwareInventory
                                     HIH.Graphics,
                                     HIH.GraphicsRAM,
                                     HIH.Processed,
+                                    HIH.WarrantyDateFrom,
                                     HIH.WarrantyDateTo,
                                     ROW_NUMBER() OVER (PARTITION BY HIH.Name ORDER BY HIH.TraceDateTime DESC) AS RowNum
                                 FROM CONSOLIDATED_HARDWARE_INV HIH
@@ -334,6 +336,7 @@ namespace HardwareInventoryWF.HardwareInventory
                                 Graphics,
                                 GraphicsRAM,
                                 Processed,
+                                WarrantyDateFrom,
                                 WarrantyDateTo
                             FROM LatestHardware
                             WHERE RowNum = 1 AND 
@@ -495,6 +498,52 @@ namespace HardwareInventoryWF.HardwareInventory
             }
         }
 
+        private void LoadDataAvailable()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    // Substitua sua consulta SQL abaixo
+                    string query = @"
+                    WITH LatestInventory AS
+                    (
+                        SELECT 
+                            Name,
+							Manufacturer,
+                            Model,
+                            ROW_NUMBER() OVER (PARTITION BY Name, Serial ORDER BY TraceDateTime DESC) AS RowNum
+                        FROM CONSOLIDATED_HARDWARE_INV
+                        WHERE (Name IS NOT NULL AND Name <> '') AND Status = 'Disponível no TI'
+                    )
+                    SELECT 
+                        Name,
+						Manufacturer,
+                        Model
+                    FROM LatestInventory
+                    WHERE RowNum = 1
+                    ORDER BY Name DESC
+					";  // Insira sua consulta SQL aqui
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        dataAdapter.Fill(dataTable);
+
+                        // Define a fonte de dados do DataGridView
+                        dataGridView2.DataSource = dataTable;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar os dados: " + ex.Message);
+                }
+            }
+        }
+
         private void materialButton3_Click_1(object sender, EventArgs e)
         {
             try
@@ -554,16 +603,21 @@ namespace HardwareInventoryWF.HardwareInventory
                 DataGridViewRow selectedRow = dataGridView1.CurrentRow;
 
                 // Obter os valores de Name e Serial da linha selecionada
-                string assetName = selectedRow.Cells["Name"].Value.ToString();
-                string serial = selectedRow.Cells["Serial"].Value.ToString();
                 string currentStatus = selectedRow.Cells["Status"].Value.ToString();
+                string manufacturer = selectedRow.Cells["Manufacturer"].Value.ToString();
+                string model = selectedRow.Cells["Model"].Value.ToString();
+                string serial = selectedRow.Cells["Serial"].Value.ToString();
+
+                string name = selectedRow.Cells["Name"].Value.ToString();
 
                 // Instanciar o formulário UpdateStatusForm
                 UpdateStatusForm updateForm = new UpdateStatusForm
                 {
-                    SelectedAssetName = assetName,
-                    SelectedSerial = serial,
-                    CurrentStatus = currentStatus
+                    CurrentStatus = currentStatus,
+                    Manufacturer = manufacturer,
+                    Model = model,
+                    Serial = serial,
+                    Name = name
                 };
 
                 // Exibir o formulário
@@ -591,10 +645,38 @@ namespace HardwareInventoryWF.HardwareInventory
             createHIForm.ShowDialog();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
+        private void materialButton6_Click(object sender, EventArgs e)
+{
+    if (dataGridView1.CurrentRow != null)
+    {
+        // Obter a linha selecionada no DataGridView
+        DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+
+        // Verifica se as células contêm valores válidos para datas antes de converter
+        if (DateTime.TryParse(selectedRow.Cells["WarrantyDateFrom"].Value?.ToString(), out DateTime warrantyDateFrom) &&
+            DateTime.TryParse(selectedRow.Cells["WarrantyDateTo"].Value?.ToString(), out DateTime warrantyDateTo))
+        {
+            // Instancia o formulário WarrantyForm e define os valores dos DateTimePickers
+            WarrantyForm updateForm = new WarrantyForm();
+            updateForm.dateTimePicker1.Value = warrantyDateFrom;
+            updateForm.dateTimePicker2.Value = warrantyDateTo;
+
+            // Exibir o formulário
+            updateForm.ShowDialog();
+        }
+        else
+        {
+            MessageBox.Show("As datas selecionadas são inválidas.");
         }
     }
-    
+    else
+    {
+        MessageBox.Show("Selecione uma linha antes de continuar.");
+    }
+}
+
+
+    }
+
 }

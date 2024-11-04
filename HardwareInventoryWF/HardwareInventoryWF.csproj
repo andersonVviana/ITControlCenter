@@ -7,7 +7,7 @@
     <ProjectGuid>{0286B2AC-915F-447D-8D1C-51A0E111D1A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>HardwareInventoryWF</RootNamespace>
-    <AssemblyName>HardwareInventoryWF</AssemblyName>
+    <AssemblyName>ITControlCenter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -59,6 +59,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.104.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -161,6 +164,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.FileSystem.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.AccessControl.5.0.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
+    </Reference>
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -225,6 +231,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -244,6 +253,9 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
@@ -335,6 +347,12 @@
     <Compile Include="HardwareInventory\UpdateStatusForm.Designer.cs">
       <DependentUpon>UpdateStatusForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="HardwareInventory\WarrantyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HardwareInventory\WarrantyForm.Designer.cs">
+      <DependentUpon>WarrantyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PrinterInventory\CRUDPrinterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -355,12 +373,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Teste.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Teste.Designer.cs">
-      <DependentUpon>Teste.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Contracts\ContractsForm.resx">
       <DependentUpon>ContractsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -385,6 +397,9 @@
     <EmbeddedResource Include="HardwareInventory\UpdateStatusForm.resx">
       <DependentUpon>UpdateStatusForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HardwareInventory\WarrantyForm.resx">
+      <DependentUpon>WarrantyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PrinterInventory\CRUDPrinterForm.resx">
       <DependentUpon>CRUDPrinterForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -402,10 +417,8 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Teste.resx">
-      <DependentUpon>Teste.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="HardwareInventoryWF_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -435,6 +448,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Logo.ico" />
+    <None Include="Resources\Logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

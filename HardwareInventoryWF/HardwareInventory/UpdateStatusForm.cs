@@ -18,7 +18,13 @@ namespace HardwareInventoryWF.HardwareInventory
 
         public string SelectedAssetName { get; set; }
         public string SelectedSerial { get; set; }
+
         public string CurrentStatus { get; set; }
+        public string Manufacturer { get; set; }
+        public string Model { get; set; }
+        public string Serial { get; set; }
+
+        public string Name { get; set; }
 
 
         public UpdateStatusForm()
@@ -48,80 +54,69 @@ namespace HardwareInventoryWF.HardwareInventory
             if (!string.IsNullOrEmpty(CurrentStatus))
             {
                 comboBox1.SelectedItem = CurrentStatus;
+                comboBox2.SelectedItem = Manufacturer;
+                comboBox4.SelectedItem = Model;
+                textBox2.Text = Serial;
+
             }
+
+
         }
 
         private void materialButton1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem != null)
+            string newStatus = comboBox1.SelectedItem?.ToString();
+            string newManufacturer = comboBox2.SelectedItem?.ToString();
+            string newModel = comboBox4.SelectedItem?.ToString();
+
+            if (newStatus != null || newManufacturer != null || newModel != null)
             {
-                string newStatus = comboBox1.SelectedItem.ToString();
-
-                // Validação: Nome do ativo e Serial não podem ser nulos
-                if (!string.IsNullOrEmpty(SelectedAssetName) && !string.IsNullOrEmpty(SelectedSerial))
+                try
                 {
-                    try
+                    var conn = connectionString;
+
+                    // Query básica sem a data
+                    string query = @"
+                    UPDATE CONSOLIDATED_HARDWARE_INV
+                    SET Status = @Status, 
+                        Manufacturer = @Manufacturer,
+                        Model = @Model,
+                        Serial = @Serial
+                    WHERE Name = @Name";
+
+                    using (SqlConnection connection = new SqlConnection(conn))
                     {
-                        var conn = connectionString;
-
-                        // Query básica sem a data
-                        string query = @"
-                        UPDATE CONSOLIDATED_HARDWARE_INV
-                        SET Status = @Status";
-
-                        // Verifica se o CheckBox foi marcado para incluir a data na query
-                        if (checkBox1.Checked)
+                        using (SqlCommand command = new SqlCommand(query, connection))
                         {
-                            query += ", WarrantyDateTo = @WarrantyDateTo";
-                        }
+                            command.Parameters.AddWithValue("@Status", (object)newStatus ?? DBNull.Value);
+                            command.Parameters.AddWithValue("@Manufacturer", (object)newManufacturer ?? DBNull.Value);
+                            command.Parameters.AddWithValue("@Model", (object)newModel ?? DBNull.Value);
+                            command.Parameters.AddWithValue("@Name", Name);
+                            command.Parameters.AddWithValue("@Serial", Serial);
 
-                        query += " WHERE Name = @Name AND Serial = @Serial";
+                            connection.Open();
+                            int rowsAffected = command.ExecuteNonQuery();
 
-                        using (SqlConnection connection = new SqlConnection(conn))
-                        {
-                            using (SqlCommand command = new SqlCommand(query, connection))
+                            if (rowsAffected > 0)
                             {
-                                // Adiciona os parâmetros obrigatórios
-                                command.Parameters.AddWithValue("@Status", newStatus);
-                                command.Parameters.AddWithValue("@Name", SelectedAssetName);
-                                command.Parameters.AddWithValue("@Serial", SelectedSerial);
-
-                                // Adiciona a data apenas se o CheckBox estiver marcado
-                                if (checkBox1.Checked)
-                                {
-                                    DateTime selectedDate = dateTimePicker1.Value;
-                                    command.Parameters.AddWithValue("@WarrantyDateTo", selectedDate);
-                                }
-
-                                // Executa a query
-                                connection.Open();
-                                int rowsAffected = command.ExecuteNonQuery();
-
-                                if (rowsAffected > 0)
-                                {
-                                    MessageBox.Show("Status atualizado com sucesso.");
-                                    this.Close();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Erro: Não foi possível atualizar o status.");
-                                }
+                                MessageBox.Show("Status atualizado com sucesso.");
+                                this.Close();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Erro: Não foi possível atualizar o status.");
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Erro ao atualizar: {ex.Message}");
-                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Nome do ativo ou Serial inválido.");
+                    MessageBox.Show($"Erro ao atualizar: {ex.Message}");
                 }
             }
             else
             {
-                MessageBox.Show("Selecione um status.");
+                MessageBox.Show("Selecione ao menos um campo.");
             }
         }
 
@@ -151,7 +146,7 @@ namespace HardwareInventoryWF.HardwareInventory
                     string query = @"
                     UPDATE CONSOLIDATED_HARDWARE_INV
                     SET WarrantyDateTo = NULL
-                    WHERE Name = @Name AND Serial = @Serial";
+                    WHERE Name = @Name";
 
                     using (SqlConnection connection = new SqlConnection(conn))
                     {
@@ -166,7 +161,6 @@ namespace HardwareInventoryWF.HardwareInventory
                             if (rowsAffected > 0)
                             {
                                 MessageBox.Show("Data removida com sucesso.");
-                                dateTimePicker1.Checked = false; // Desmarcar o DateTimePicker
                                 this.Close();
                             }
                             else

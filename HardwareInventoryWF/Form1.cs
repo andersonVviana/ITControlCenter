@@ -15,6 +15,8 @@ using System.Text;
 using Newtonsoft.Json;
 using HardwareInventoryWF.PrinterInventory;
 using HardwareInventoryWF.Contracts;
+using System.Collections.Generic;
+using FontAwesome.Sharp;
 
 namespace HardwareInventoryWF
 {
@@ -28,18 +30,23 @@ namespace HardwareInventoryWF
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
+        private bool isDarkMode = false;
 
         //Zabbix DMA
-        private const string zabbixUrlDma = "http://10.1.0.55/api_jsonrpc.php"; // Altere para o URL do seu Zabbix
+        private const string zabbixUrlDma = "http://10.1.0.55/api_jsonrpc.php";
+        private string zabbixPlc = "http://10.2.0.107/zabbix//api_jsonrpc.php";
         private const string usernameDma = "Admin"; // Altere para seu usuário
         private const string passwordDma = "2rD&2Bn?F4";
         private const string hostId = "10946"; // LINK NEOVIA PLC
         private const string hostId2 = "10947"; // LINK VIVO PLC
+        private const string hostId3 = "";
         private const string itemKeyDma = "icmpping"; // Chave do item ICMP Ping
 
         private static readonly HttpClient client = new HttpClient();
-        private string apiUrl = "http://10.2.0.107/zabbix//api_jsonrpc.php";
+
         private string authToken;
+
+        private string authTokenlistView = "";
 
         private Timer updateTimer;
 
@@ -59,10 +66,8 @@ namespace HardwareInventoryWF
             panel15.Size = new Size(20, 20);
             panel16.Size = new Size(20, 20);
 
-            _ = InitializeHostStatus();
+            _ = InitializeHostStatusPLC();
 
-            //label9 = new Label { Location = new System.Drawing.Point(10, 10), AutoSize = true };
-            //this.Controls.Add(label9);
             this.Load += Form1_Load;
 
             panel2.Paint += new PaintEventHandler(RoundPanel2Corners);
@@ -74,6 +79,12 @@ namespace HardwareInventoryWF
             panel8.Paint += new PaintEventHandler(RoundPanel8Corners);
             //panel9.Paint += new PaintEventHandler(RoundPanel9Corners);
 
+            // Inicializa o IconButton com o ícone de Lua (Moon)
+            iconButton3.IconChar = IconChar.Moon;
+            iconButton3.IconColor = Color.Black;
+
+            toolTip1.SetToolTip(iconButton3, "Dark Mode");
+
             LoadDataOperatingSystem();
             LoadDataManufacter();
             LoadDataType();
@@ -81,6 +92,8 @@ namespace HardwareInventoryWF
             LoadDataAvailable();
             LoadDataWarranty();
             LoadDataPrinters();
+            LoadDataToGridView();
+
         }
 
         #region RoundPanel
@@ -261,11 +274,12 @@ namespace HardwareInventoryWF
 
         #endregion
 
+        #region Charts and DatagridView
 
         private void LoadDataOperatingSystem()
         {
             var conn = connectionString;
-            
+
 
             // SQL para obter a quantidade de equipamentos por sistema operacional
             string query = @"
@@ -360,7 +374,7 @@ namespace HardwareInventoryWF
                     SqlDataReader reader = command.ExecuteReader();
 
                     // Limpar séries do gráfico antes de adicionar novos dados
-                    chart6.Series.Clear();
+                    //chart6.Series.Clear();
                     Series series = new Series
                     {
                         Name = "",
@@ -384,18 +398,18 @@ namespace HardwareInventoryWF
                     }
 
                     // Adicionar a série ao gráfico
-                    chart6.Series.Add(series);
+                    //chart6.Series.Add(series);
 
-                    ChartArea chartArea = chart6.ChartAreas[0];
-                    chartArea.AxisX.MajorGrid.LineWidth = 0; // Remove as linhas verticais
-                    chartArea.AxisY.MajorGrid.LineColor = Color.Gray; // Cor das linhas horizontais
-                    chartArea.AxisY.MajorGrid.LineWidth = 1; // Largura das linhas horizontais
-                    chartArea.AxisX.MajorGrid.Enabled = false; // Desativa as linhas verticais (grade principal)
-                    chartArea.AxisY.MajorGrid.Enabled = true;
+                    //ChartArea chartArea = chart6.ChartAreas[0];
+                    //chartArea.AxisX.MajorGrid.LineWidth = 0; // Remove as linhas verticais
+                    //chartArea.AxisY.MajorGrid.LineColor = Color.Gray; // Cor das linhas horizontais
+                    //chartArea.AxisY.MajorGrid.LineWidth = 1; // Largura das linhas horizontais
+                    //chartArea.AxisX.MajorGrid.Enabled = false; // Desativa as linhas verticais (grade principal)
+                    //chartArea.AxisY.MajorGrid.Enabled = true;
 
-                    chart6.Legends.Clear();
+                    //chart6.Legends.Clear();
 
-                    label18.Text = "Total: " + totalEquipamentos;
+                    //label18.Text = "Total: " + totalEquipamentos;
 
                     // Fechar o leitor de dados
                     reader.Close();
@@ -634,20 +648,19 @@ namespace HardwareInventoryWF
             }
         }
 
-
         private void LoadDataWarranty()
         {
             var conn = connectionString;
 
             string query = @"
             SELECT 
-                WarrantyDateTo, 
+                WarrantyDateFrom, 
                 COUNT(DISTINCT Name) AS Qty
             FROM CONSOLIDATED_HARDWARE_INV
             WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
-              AND WarrantyDateTo IS NOT NULL
+              AND WarrantyDateFrom IS NOT NULL
               AND (Status = 'Ativo' OR Status = 'Disponível no TI' OR Status = 'Na Assistência Técnica' OR Status = 'Atestado / Licença' OR Status = 'Em Análise')
-            GROUP BY WarrantyDateTo
+            GROUP BY WarrantyDateFrom
             ORDER BY Qty DESC;
     ";
 
@@ -697,16 +710,16 @@ namespace HardwareInventoryWF
                         var point = series.Points.Add(novos);
                         point.AxisLabel = "New Equipment";
                         point.Label = FormatLabel(novos);
-                        point.LegendText = "New Equipment";  // Definir nome na legenda
+                        point.LegendText = "New Equipment (<= 2 Years)";  // Definir nome na legenda
                         point.Color = Color.FromArgb(129, 41, 144);
                     }
 
                     if (meiaVida > 0)
                     {
                         var point = series.Points.Add(meiaVida);
-                        point.AxisLabel = "Mid-life Equipment";
+                        point.AxisLabel = "Midlife Equipment";
                         point.Label = FormatLabel(meiaVida);
-                        point.LegendText = "Mid-life Equipment";  // Definir nome na legenda
+                        point.LegendText = "Midlife Equipment (3-4 Years)";  // Definir nome na legenda
                         point.Color = Color.FromArgb(153, 50, 204);
                     }
 
@@ -715,7 +728,7 @@ namespace HardwareInventoryWF
                         var point = series.Points.Add(fimDeVida);
                         point.AxisLabel = "End of Life";
                         point.Label = FormatLabel(fimDeVida);
-                        point.LegendText = "End of Life";  // Definir nome na legenda
+                        point.LegendText = "End of Life (5-6 Years)";  // Definir nome na legenda
                         point.Color = Color.FromArgb(178, 99, 255);
                     }
 
@@ -724,7 +737,7 @@ namespace HardwareInventoryWF
                         var point = series.Points.Add(obsoleto);
                         point.AxisLabel = "Obsolete";
                         point.Label = FormatLabel(obsoleto);
-                        point.LegendText = "Obsolete";  // Definir nome na legenda
+                        point.LegendText = "Obsolete (> 7 Years)";  // Definir nome na legenda
                         point.Color = Color.FromArgb(137, 62, 255);
                     }
 
@@ -765,6 +778,111 @@ namespace HardwareInventoryWF
             }
         }
 
+        private void LoadDataToGridView()
+        {
+            var conn = connectionString;
+
+            string query = @"
+            SELECT 
+                LEFT(Name, 4) AS GroupName, 
+                WarrantyDateFrom 
+            FROM CONSOLIDATED_HARDWARE_INV
+            WHERE (Name LIKE 'ABNB%' OR Name LIKE 'ABWS%' OR Name LIKE 'ABTC%')
+              AND WarrantyDateFrom IS NOT NULL
+              AND (Status = 'Ativo' OR Status = 'Disponível no TI' 
+                   OR Status = 'Na Assistência Técnica' 
+                   OR Status = 'Atestado / Licença' 
+                   OR Status = 'Em Análise');
+            ";
+
+            using (SqlConnection connection = new SqlConnection(conn))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    // Dicionário para armazenar as contagens por grupo (ABNB, ABWS, ABTC)
+                    var groupedData = new Dictionary<string, (int New, int Mid, int End, int Obsolete)>();
+
+                    // Processar os dados
+                    while (reader.Read())
+                    {
+                        string groupName = reader.GetString(0);  // Extrai ABNB, ABWS ou ABTC
+                        DateTime warrantyDate = reader.GetDateTime(1);
+                        int anosDeUso = DateTime.Now.Year - warrantyDate.Year;
+
+                        // Inicializa contagens, se necessário
+                        if (!groupedData.ContainsKey(groupName))
+                            groupedData[groupName] = (0, 0, 0, 0);
+
+                        // Atualiza a contagem com base nos anos de uso
+                        var counts = groupedData[groupName];
+                        if (anosDeUso <= 2)
+                            groupedData[groupName] = (counts.New + 1, counts.Mid, counts.End, counts.Obsolete);
+                        else if (anosDeUso <= 4)
+                            groupedData[groupName] = (counts.New, counts.Mid + 1, counts.End, counts.Obsolete);
+                        else if (anosDeUso <= 6)
+                            groupedData[groupName] = (counts.New, counts.Mid, counts.End + 1, counts.Obsolete);
+                        else
+                            groupedData[groupName] = (counts.New, counts.Mid, counts.End, counts.Obsolete + 1);
+                    }
+
+                    reader.Close();
+
+                    // Configurar o DataGridView
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Columns.Clear();
+
+                    // Adicionar colunas
+                    dataGridView1.Columns.Add("GroupName", "Equipment Type");
+                    dataGridView1.Columns.Add("NewEquipment", "New Equipment");
+                    dataGridView1.Columns.Add("MidLife", "Midlife Equipment");
+                    dataGridView1.Columns.Add("EndOfLife", "End of Life");
+                    dataGridView1.Columns.Add("Obsolete", "Obsolete");
+                    dataGridView1.Columns.Add("Total", "Total");  // Coluna para total de cada linha
+
+                    // Mapeamento dos nomes personalizados
+                    var nameMapping = new Dictionary<string, string>
+                    {
+                        { "ABNB", "Laptop" },
+                        { "ABWS", "Desktop" },
+                        { "ABTC", "ThinClient" }
+                    };
+
+                    // Preencher DataGridView com os dados agrupados
+                    foreach (var kvp in groupedData)
+                    {
+                        string groupName = kvp.Key;
+                        var (newEquip, mid, end, obsolete) = kvp.Value;
+
+                        // Calcular o total por linha
+                        int total = newEquip + mid + end + obsolete;
+
+                        // Obter o nome personalizado ou usar o original
+                        string equipmentType = nameMapping.ContainsKey(groupName) ? nameMapping[groupName] : groupName;
+
+                        // Adicionar a linha ao DataGridView
+                        dataGridView1.Rows.Add(equipmentType, newEquip, mid, end, obsolete, total);
+                    }
+
+                    // Personalizar a aparência do DataGridView
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                    dataGridView1.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+                    dataGridView1.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    dataGridView1.AllowUserToAddRows = false;
+                    dataGridView1.AllowUserToResizeRows = false;
+                    dataGridView1.RowHeadersVisible = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao acessar o banco de dados: " + ex.Message);
+                }
+            }
+        }
 
         private void LoadDataAvailable()
         {
@@ -812,30 +930,12 @@ namespace HardwareInventoryWF
             }
         }
 
-        
+        #endregion
 
-        // Obtem todos os hosts
-        private async Task<JToken> GetAllHosts(string authToken)
-        {
-            var payload = new
-            {
-                jsonrpc = "2.0",
-                method = "host.get",
-                @params = new
-                {
-                    output = new[] { "hostid", "name" }
-                },
-                auth = authToken,
-                id = 2
-            };
-
-            var response = await SendPostRequest(payload);
-            return response?["result"];
-        }
-
+        #region Zabbix DMA e PLC
 
         // Inicializa o status do host específico
-        private async Task InitializeHostStatus()
+        private async Task InitializeHostStatusPLC()
         {
             try
             {
@@ -861,6 +961,7 @@ namespace HardwareInventoryWF
                 // Define a cor do painel de acordo com o status
                 panel14.BackColor = status2 == "1" ? System.Drawing.Color.Green : System.Drawing.Color.Red;
                 MakeCircular(panel14); // Se desejar que o painel tenha formato circular
+
             }
             catch (Exception ex)
             {
@@ -946,7 +1047,7 @@ namespace HardwareInventoryWF
 
             var response = await SendPostRequest(payload);
             var host = response?["result"]?.FirstOrDefault();
-            return host?["interfaces"]?[0]?["ip"]?.ToString(); // Obtém o primeiro IP do host
+            return host?["interfaces"]?[0]?["ip"]?.ToString();
         }
 
         public async Task<string> GetHostIPZabbixPLC(string hostId)
@@ -965,7 +1066,7 @@ namespace HardwareInventoryWF
             };
 
             var content = new StringContent(JObject.FromObject(requestData).ToString(), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
+            var response = await client.PostAsync(zabbixPlc, content);
             var responseString = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseString);
 
@@ -1030,8 +1131,8 @@ namespace HardwareInventoryWF
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            InitializeHostStatus();
-            UpdatePingStatusAndIP();
+            InitializeHostStatusPLC();
+            UpdatePingStatusAndIPZabbixDma();
         }
 
         private void panel2_MouseDown(object sender, MouseEventArgs e)
@@ -1049,8 +1150,8 @@ namespace HardwareInventoryWF
                 method = "user.login",
                 @params = new
                 {
-                    user = "WFApp", // Altere se necessário
-                    password = "2rD&2Bn?F4" // Altere para a senha correta
+                    userPLC = "WFApp", // Altere se necessário
+                    passwordPLC = "2rD&2Bn?F4" // Altere para a senha correta
                 },
                 id = 1
             };
@@ -1097,7 +1198,7 @@ namespace HardwareInventoryWF
             public T Result { get; set; }
         }
 
-
+        #endregion
 
         private void materialButton2_Click(object sender, EventArgs e)
         {
@@ -1127,7 +1228,7 @@ namespace HardwareInventoryWF
             };
 
             var content = new StringContent(JObject.FromObject(authData).ToString(), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
+            var response = await client.PostAsync(zabbixPlc, content);
             var responseString = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseString);
 
@@ -1160,7 +1261,7 @@ namespace HardwareInventoryWF
             };
 
             var content = new StringContent(JObject.FromObject(requestData).ToString(), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
+            var response = await client.PostAsync(zabbixPlc, content);
             var responseString = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseString);
 
@@ -1193,7 +1294,7 @@ namespace HardwareInventoryWF
             };
 
             var content = new StringContent(JObject.FromObject(requestData).ToString(), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
+            var response = await client.PostAsync(zabbixPlc, content);
             var responseString = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseString);
 
@@ -1228,7 +1329,7 @@ namespace HardwareInventoryWF
             };
 
             var content = new StringContent(JObject.FromObject(requestData).ToString(), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
+            var response = await client.PostAsync(zabbixPlc, content);
             var responseString = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseString);
 
@@ -1259,10 +1360,10 @@ namespace HardwareInventoryWF
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await UpdatePingStatusAndIP();
+            await UpdatePingStatusAndIPZabbixDma();
         }
 
-        private async Task UpdatePingStatusAndIP()
+        private async Task UpdatePingStatusAndIPZabbixDma()
         {
             try
             {
@@ -1323,5 +1424,63 @@ namespace HardwareInventoryWF
 
             contractsForm.Show();
         }
+
+        private void iconButton3_Click(object sender, EventArgs e)
+        {
+            // Alterna o estado do modo
+            isDarkMode = !isDarkMode;
+
+            if (isDarkMode)
+            {
+                panel2.BackColor = Color.Black;
+                label1.ForeColor = Color.White;
+                label2.ForeColor = Color.White;
+                materialButton3.ForeColor = Color.White;
+                materialButton12.ForeColor = Color.White;
+                materialButton12.IconColor = Color.White;
+
+                iconButton3.IconChar = IconChar.Sun;
+                iconButton3.IconColor = Color.White;
+
+                toolTip1.SetToolTip(iconButton3, "White Mode");
+            }
+            else
+            {
+                panel2.BackColor = Color.White;
+                label1.ForeColor = Color.Black;
+                label2.ForeColor = Color.Black;
+                materialButton3.ForeColor = Color.Black;
+                materialButton12.ForeColor = Color.Black;
+                materialButton12.IconColor = Color.Black;
+
+                iconButton3.IconChar = IconChar.Moon;
+                iconButton3.IconColor = Color.Black;
+
+                toolTip1.SetToolTip(iconButton3, "Dark Mode");
+            }
+        }
+
+        private void materialButton6_Click(object sender, EventArgs e)
+        {
+            // Definindo as propriedades do NotifyIcon
+            notifyIcon1.Icon = Properties.Resources.Logo;
+            notifyIcon1.Text = "IT Control Center";
+            notifyIcon1.Visible = true;
+
+            // Exibe uma notificação na bandeja
+            notifyIcon1.ShowBalloonTip(3000, "IT Control Center", "O aplicativo está minimizado na bandeja.", ToolTipIcon.Info);
+
+            // Evento de clique no ícone da bandeja para restaurar o formulário
+            notifyIcon1.DoubleClick += (s, args) =>
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+                notifyIcon1.Visible = false;
+            };
+
+            // Minimiza o formulário para a bandeja do sistema
+            this.Hide();
+        }
     }
+    
 }
